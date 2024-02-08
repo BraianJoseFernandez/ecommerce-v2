@@ -19,7 +19,9 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased" x-data="{
+    sidebarOpen: false,
+}">
     @include('layouts.partials.admin.navigation')
     @include('layouts.partials.admin.sidebar')
 
