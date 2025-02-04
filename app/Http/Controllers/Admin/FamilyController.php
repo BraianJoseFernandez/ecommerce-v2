@@ -13,7 +13,7 @@ class FamilyController extends Controller
      */
     public function index()
     {
-        $families = Family::paginate();
+        $families = Family::orderBy('id', 'DESC')->paginate(10);
         return view('admin.families.index', compact('families'));
     }
 
@@ -30,7 +30,19 @@ class FamilyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        Family::create($request->all());
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien Hecho!',
+            'text' => 'Familia creada correctamente.',
+        ]);
+
+        return redirect()->route('admin.families.index');
     }
 
     /**
@@ -46,7 +58,7 @@ class FamilyController extends Controller
      */
     public function edit(Family $family)
     {
-        //
+        return view('admin.families.edit', compact('family'));
     }
 
     /**
@@ -54,7 +66,19 @@ class FamilyController extends Controller
      */
     public function update(Request $request, Family $family)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $family->update($request->all());
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien Hecho!',
+            'text' => 'Familia actualizada correctamente.',
+        ]);
+
+        return redirect()->route('admin.families.edit', $family);
     }
 
     /**
@@ -62,6 +86,26 @@ class FamilyController extends Controller
      */
     public function destroy(Family $family)
     {
-        //
+
+        if ($family->categories()->count() > 0) {
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => '¡UPS!',
+                'text' => 'no se puede eliminar la familia por que ya tiene categorias asignadas',
+            ]);
+
+            return redirect()->route('admin.families.index');
+        }
+
+        $family->delete();
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Bien Hecho!',
+            'text' => 'Familia eliminada correctamente.',
+        ]);
+
+        return redirect()->route('admin.families.index');
+
     }
 }

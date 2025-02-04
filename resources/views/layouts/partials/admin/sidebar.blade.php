@@ -11,7 +11,19 @@
             'icon' => 'fa-solid fa-box-open',
             'route' => route('admin.families.index'),
             'active' => request()->routeIs('admin.families.*'),
-        ]
+        ],
+        [
+            'name' => 'Categorias',
+            'icon' => 'fa-solid fa-tags',
+            'route' => route('admin.categories.index'),
+            'active' => request()->routeIs('admin.categories.*'),
+        ],
+        [
+            'name' => 'Subcategorias',
+            'icon' => 'fa-solid fa-tag',
+            'route' => route('admin.subcategories.index'),
+            'active' => request()->routeIs('admin.subcategories.*'),
+        ],
     ];
 @endphp
 
@@ -27,9 +39,8 @@
         <ul class="space-y-2 font-medium">
             @foreach ($links as $link)
                 <li>
-                    <a href="{{$link['route']}}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{$link['active'] ? 'bg-gray-400' : ''}}"
-                        >
+                    <a href="{{ $link['route'] }}"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ $link['active'] ? 'bg-gray-400' : '' }}">
                         <span class="inline-flex w-6 h-6 justify-center items-center">
                             <i class="{{ $link['icon'] }} text-gray-500"></i>
                         </span>
