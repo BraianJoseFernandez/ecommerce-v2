@@ -53,7 +53,7 @@ class ProductsCreate extends Component
             'image' => 'required|image|max:2048',
             'product.sku' => 'required|unique:products,sku',
             'product.name' => 'required|max:255',
-            'product.description' => 'required',
+            'product.description' => 'nullable',
             'product.price' => 'required|numeric|min:0',
             'product.subcategory_id' => 'required|exists:subcategories,id',
         ]);
