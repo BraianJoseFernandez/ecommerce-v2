@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Family;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,10 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('kobestreet2013'),
         ]);
 
-        $this->call([FamilySeeder::class]);
+        $this->call([
+            FamilySeeder::class,
+            OptionSeeder::class,
+        ]);
 
         Product::factory(150)->create();
     }
