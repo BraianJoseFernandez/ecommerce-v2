@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Livewire\Admin\Options;
+
+use Livewire\Component;
+
+class AddNewFeature extends Component
+{
+    public $option;
+    public $newFeature = [ 'description' => '', 'value' => '' ];
+
+    public function addNewFeature()
+    {
+        $this->validate([
+            'newFeature.description' => 'required',
+            'newFeature.value' => 'required',
+        ]);
+
+        $this->option->features()->create($this->newFeature);
+        $this->dispatch('featureAdded');
+        $this->reset('newFeature');
+    }
+
+    public function render()
+    {
+        return view('livewire.admin.options.add-new-feature');
+    }
+}

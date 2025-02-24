@@ -38,7 +38,7 @@ class OptionSeeder extends Seeder
 
             ],
             [
-                'name' => 'color',
+                'name' => 'Color',
                 'type' => 2,
                 'features' =>
                 [
@@ -69,8 +69,8 @@ class OptionSeeder extends Seeder
                 ]
             ],
             [
-                'name' => 'sexo',
-                'type' => 3,
+                'name' => 'Sexo',
+                'type' => 1,
                 'features' =>
                 [
                     [
