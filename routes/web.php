@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfilePhotoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Ruta para servir fotos de perfil
+Route::get('/profile-photo/{user}', [ProfilePhotoController::class, 'show'])->name('profile.photo');
 
 Route::middleware([
     'auth:sanctum',

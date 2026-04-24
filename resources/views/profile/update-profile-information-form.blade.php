@@ -10,7 +10,18 @@
     <x-slot name="form">
         <!-- Profile Photo -->
         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-            <div x-data="{photoName: null, photoPreview: null}" class="col-span-6 sm:col-span-4">
+            <div x-data="{
+                photoName: null,
+                photoPreview: null,
+                init() {
+                    // Escuchar evento personalizado
+                    this.$el.addEventListener('reset-preview', () => {
+                        this.photoPreview = null;
+                        this.photoName = null;
+                    });
+                }
+            }"
+                 class="col-span-6 sm:col-span-4">
                 <!-- Profile Photo File Input -->
                 <input type="file" id="photo" class="hidden"
                             wire:model.live="photo"
@@ -28,7 +39,10 @@
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" x-show="! photoPreview">
-                    <img src="{{ $this->user->profile_photo_url }}" alt="{{ $this->user->name }}" class="rounded-full h-20 w-20 object-cover">
+                    <img src="{{ $this->user->profile_photo_url }}"
+                         alt="{{ $this->user->name }}"
+                         class="rounded-full h-20 w-20 object-cover"
+                         id="profile-photo">
                 </div>
 
                 <!-- New Profile Photo Preview -->
@@ -50,6 +64,48 @@
 
                 <x-input-error for="photo" class="mt-2" />
             </div>
+
+            <script>
+                document.addEventListener('livewire:updated', function() {
+                    // Obtener la imagen
+                    const img = document.getElementById('profile-photo');
+                    if (img) {
+                        // Crear una nueva imagen con un timestamp
+                        const timestamp = new Date().getTime();
+
+                        // Obtener la URL base sin parámetros
+                        const baseSrc = img.src.split('?')[0];
+
+                        // Crear nueva imagen para precargarla
+                        const newImg = new Image();
+                        newImg.onload = function() {
+                            // Reemplazar completamente el src con timestamp
+                            img.src = baseSrc + '?t=' + timestamp;
+                        };
+                        newImg.onerror = function() {
+                            // Si hay error, aún actualizar el src
+                            img.src = baseSrc + '?t=' + timestamp;
+                        };
+                        // Iniciar la carga
+                        newImg.src = baseSrc + '?t=' + timestamp;
+                    }
+
+                    // Disparar evento para limpiar el preview
+                    const photoDiv = document.querySelector('[x-data*="photoPreview"]');
+                    if (photoDiv) {
+                        photoDiv.dispatchEvent(new Event('reset-preview'));
+                    }
+                });
+
+                // Limpiar caché del navegador cuando carga la página
+                window.addEventListener('load', function() {
+                    const img = document.getElementById('profile-photo');
+                    if (img && !img.src.includes('?')) {
+                        const timestamp = new Date().getTime();
+                        img.src = img.src + '?t=' + timestamp;
+                    }
+                });
+            </script>
         @endif
 
         <!-- Name -->

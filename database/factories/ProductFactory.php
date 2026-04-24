@@ -16,11 +16,15 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        if (!\Illuminate\Support\Facades\Storage::exists('public/products')) {
+            \Illuminate\Support\Facades\Storage::makeDirectory('public/products');
+        }
+
         return [
             'sku' => $this->faker->unique()->numberBetween(100000, 999999),
             'name' => $this->faker->words(3, true),
             'description' => $this->faker->text(200),
-            'image_path' => 'products/' . $this->faker->image('public/storage/products', 640, 480, null, false),
+            'image_path' => 'products/' . $this->faker->image(storage_path('app/public/products'), 640, 480, null, false),
             'price' => $this->faker->randomFloat(2, 1, 1000),
             'subcategory_id' => $this->faker->numberBetween(1,91)
         ];
