@@ -6,6 +6,7 @@ use App\Models\Feature;
 use App\Models\Option;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use App\Models\Variant;
 
 class ProductVariants extends Component
 {
@@ -15,15 +16,16 @@ class ProductVariants extends Component
             [
                 'id' => '',
                 'value' => '',
-                'description' => ''
-            ]
+                'description' => '',
+            ],
         ],
     ];
 
     public $product;
-    public $openModal = false;
-    public $options;
 
+    public $openModal = false;
+
+    public $options;
 
     public function mount()
     {
@@ -36,8 +38,8 @@ class ProductVariants extends Component
             [
                 'id' => '',
                 'value' => '',
-                'description' => ''
-            ]
+                'description' => '',
+            ],
         ];
     }
 
@@ -52,7 +54,7 @@ class ProductVariants extends Component
         $this->variant['features'][] = [
             'id' => '',
             'value' => '',
-            'description' => ''
+            'description' => '',
         ];
     }
 
@@ -77,10 +79,12 @@ class ProductVariants extends Component
         ]);
 
         $this->product->options()->attach($this->variant['option_id'], [
-            'features' => $this->variant['features']
+            'features' => $this->variant['features'],
         ]);
 
         $this->product = $this->product->fresh();
+
+        $this->generarVariantes();
 
         $this->reset(['variant', 'openModal']);
 
@@ -97,17 +101,69 @@ class ProductVariants extends Component
         }
     }
 
-    public function deleteFeature($optionId, $featureId){
-        $this->product->options()->UpdateExistingPivot($optionId, ['features' => array_filter($this->product->options()->find($optionId)->pivot->features, function($feature) use ($featureId){
+    public function deleteFeature($optionId, $featureId)
+    {
+        $this->product->options()->UpdateExistingPivot($optionId, ['features' => array_filter($this->product->options()->find($optionId)->pivot->features, function ($feature) use ($featureId) {
             return $feature['id'] != $featureId;
         })]);
 
         $this->product = $this->product->fresh();
+
+        $this->generarVariantes();
     }
 
-    public function confirmDeleteOption($OptionId){
+    public function confirmDeleteOption($OptionId)
+    {
         $this->product->options()->detach($OptionId);
         $this->product = $this->product->fresh();
+
+        $this->generarVariantes();
+    }
+
+    public function generarVariantes()
+    {
+        $features = $this->product->options->pluck('pivot.features');
+
+        $combinaciones = $this->generarCombinaciones($features);
+
+        $this->product->variants()->delete();
+
+        foreach ($combinaciones as $combinacion) {
+            $variant = Variant::create([
+                'product_id' => $this->product->id,
+            ]);
+
+            $variant->features()->attach($combinacion);
+        }
+
+        $this->dispatch('variant-generated');
+
+        $this->product = $this->product->fresh();
+    }
+
+    public function generarCombinaciones($arrays, $indice = 0, $combinacion = [])
+    {
+
+        if ($indice == count($arrays)) {
+
+            return [$combinacion];
+
+        }
+
+        $resultado = [];
+
+        foreach ($arrays[$indice] as $item) {
+
+            $combinacionesTemporal = $combinacion;
+
+            $combinacionesTemporal[] = $item['id'];
+
+            $resultado = array_merge($resultado, $this->generarCombinaciones($arrays, $indice + 1, $combinacionesTemporal));
+
+        }
+
+        return $resultado;
+
     }
 
     public function render()

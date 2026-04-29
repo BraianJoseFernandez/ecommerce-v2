@@ -55,6 +55,7 @@ class ProductsCreate extends Component
             'product.name' => 'required|max:255',
             'product.description' => 'nullable',
             'product.price' => 'required|numeric|min:0',
+            'product.stock' => 'required|numeric|min:0',
             'product.subcategory_id' => 'required|exists:subcategories,id',
         ]);
 

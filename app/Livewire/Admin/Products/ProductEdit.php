@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\On;
 
 class ProductEdit extends Component
 {
@@ -24,7 +25,7 @@ class ProductEdit extends Component
 
     public function mount($product)
     {
-        $this->productEdit = $product->only('sku', 'name', 'description','image_path', 'price', 'subcategory_id');
+        $this->productEdit = $product->only('sku', 'name', 'description','image_path', 'price', 'stock', 'subcategory_id');
         $this->families = Family::all();
         $this->category_id = $product->subcategory->category->id;
         $this->family_id = $product->subcategory->category->family_id;
@@ -54,6 +55,13 @@ class ProductEdit extends Component
         $this->productEdit['subcategory_id'] = "";
     }
 
+    #[On('variant-generated')]
+    public function updateProduct()
+    {
+        $this->product = $this->product->fresh();
+    }
+
+
     #[Computed()]
     public function categories(){
         return Category::where('family_id', $this->family_id)->get();
@@ -72,6 +80,7 @@ class ProductEdit extends Component
             'product.name' => 'required|max:255',
             'product.description' => 'nullable',
             'product.price' => 'required|numeric|min:0',
+            'product.stock' => 'required|numeric|min:0',
             'product.subcategory_id' => 'required|exists:subcategories,id',
         ]);
 

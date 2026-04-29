@@ -31,38 +31,40 @@
                             <div class="flex flex-wrap">
                                 {{-- valores --}}
                                 @foreach ($option->pivot->features as $feature)
-                                    @switch($option->type)
-                                        @case(1)
-                                            {{-- texto --}}
-                                            <span
-                                                class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
-                                                {{ $feature['description'] }}
-                                                <button class="ml-1" {{-- wire:click="deleteFeature({{ $feature->id }})" --}}
-                                                    onclick="confirmDeleteFeature({{ $option->id }}, {{ $feature['id'] }})">
-                                                    <i class="fas solid fa-xmark hover:text-red-500"></i>
-                                                </button>
-                                            </span>
-                                        @break
-
-                                        @case(2)
-                                            {{-- color --}}
-                                            <div class="relative">
+                                    <div wire:key="option-{{ $option->id }}-feature-{{ $feature['id'] }}">
+                                        @switch($option->type)
+                                            @case(1)
+                                                {{-- texto --}}
                                                 <span
-                                                    class="inline-block w-6 h-6 shadow-lg  rounded-full border-2 border-gray-300 mr-4"
-                                                    style="background-color: {{ $feature['value'] }}">
+                                                    class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                                                    {{ $feature['description'] }}
+                                                    <button class="ml-1" {{-- wire:click="deleteFeature({{ $feature->id }})" --}}
+                                                        onclick="confirmDeleteFeature({{ $option->id }}, {{ $feature['id'] }})">
+                                                        <i class="fas solid fa-xmark hover:text-red-500"></i>
+                                                    </button>
                                                 </span>
+                                            @break
 
-                                                <button
-                                                    class="absolute z-10 left-3 -top-2 rounded-full bg-red-500 hover:bg-red-700 h-4 w-4 flex items-center justify-center"
-                                                    {{-- wire:click="deleteFeature({{ $feature->id }})" --}}
-                                                    onclick="confirmDeleteFeature({{ $option->id }}, {{ $feature['id'] }})">
-                                                    <i class="fas solid fa-xmark text-white text-xs"></i>
-                                                </button>
-                                            </div>
-                                        @break
+                                            @case(2)
+                                                {{-- color --}}
+                                                <div class="relative">
+                                                    <span
+                                                        class="inline-block w-6 h-6 shadow-lg  rounded-full border-2 border-gray-300 mr-4"
+                                                        style="background-color: {{ $feature['value'] }}">
+                                                    </span>
 
-                                        @default
-                                    @endswitch
+                                                    <button
+                                                        class="absolute z-10 left-3 -top-2 rounded-full bg-red-500 hover:bg-red-700 h-4 w-4 flex items-center justify-center"
+                                                        {{-- wire:click="deleteFeature({{ $feature->id }})" --}}
+                                                        onclick="confirmDeleteFeature({{ $option->id }}, {{ $feature['id'] }})">
+                                                        <i class="fas solid fa-xmark text-white text-xs"></i>
+                                                    </button>
+                                                </div>
+                                            @break
+
+                                            @default
+                                        @endswitch
+                                    </div>
                                 @endforeach
                             </div>
 
@@ -70,8 +72,7 @@
                     @endforeach
                 </div>
             @else
-                <div class="flex items-center p-4  text-sm text-blue-800 rounded-lg bg-blue-50 "
-                    role="alert">
+                <div class="flex items-center p-4  text-sm text-blue-800 rounded-lg bg-blue-50 " role="alert">
                     <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -90,6 +91,55 @@
 
         </div>
     </section>
+
+    {{-- seccion de variantes --}}
+
+    @if ($product->variants->count())
+    
+        <section class="rounded-lg bg-white shadow-lg border border-gray-200 mt-12">
+
+        <header class="border-b border-gray-200 px-6 py-2">
+            <div class="flex justify-between">
+                <h1 class="text-lg font-semibold text-gray-700">
+                    Variantes
+                </h1>
+            </div>
+        </header>
+
+        <div class="p-6">
+            <ul class="divide-y -my-4">
+                @foreach ($product->variants as $item)
+                    <li class="py-4 flex items-center">
+                        <img src="{{ $item->image }}" alt="" class="w-12 h-12 object-cover object-center">
+
+                        <p class="divide-x">
+                            @foreach ($item->features as $feature)
+                                <span class="px-3">
+                                    {{ $feature->description }}
+                                </span>
+                            @endforeach
+                        </p>
+
+                        <a href="{{ route('admin.products.variants', [$product, $item]) }}" class="ml-auto btn btn-blue"> Editar </a>
+                        
+                        <div>
+                            <span class="">
+                                
+                            </span>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+            
+
+        </div>
+        </section>
+    @endif
+
+    
+        
+
+    
 
     <x-dialog-modal wire:model="openModal">
         <x-slot name="title">

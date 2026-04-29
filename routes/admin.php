@@ -18,3 +18,11 @@ Route::resource('families', FamilyController::class);
 Route::resource('categories', CategoryController::class);
 Route::resource('subcategories', SubcategoryController::class);
 Route::resource('products', ProductController::class);
+Route::get('products/{product}/variants/{variant}', [ProductController::class, 'variants'])
+    ->name('products.variants')
+    ->scopeBindings();
+    // el scopeBondings lo que hace es que si esta relacionado el producto con la variant entonce va a validar sino devuelve un 404
+
+Route::put('products/{product}/variants/{variant}', [ProductController::class, 'variantsUpdate'])
+    ->name('products.variantsUpdate')
+    ->scopeBindings();
