@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfilePhotoController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Models\Variant;
-
+use App\Http\Controllers\WelcomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,9 +16,7 @@ use App\Models\Variant;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 // Ruta para servir fotos de perfil
 Route::get('/profile-photo/{user}', [ProfilePhotoController::class, 'show'])->name('profile.photo');
