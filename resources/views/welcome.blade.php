@@ -43,7 +43,7 @@
                     <h1 class="text-lg font-bold text-gray-800 line-clamp-2 mb-2 min-h-[56px]">{{ $product->name }}</h1>
                     <p class="text-gray-600">$ {{ $product->price }}</p>
                 </div>
-                <a href="" class="btn btn-blue block  w-full text-center">Ver Mas</a>
+                <a href="" class="btn btn-emerald block  w-full text-center">Ver Mas</a>
             </article>
         @endforeach
     </div>

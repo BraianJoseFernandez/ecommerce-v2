@@ -29,3 +29,7 @@
 .btn-purple-100 {
     @apply bg-purple-600 text-white hover:bg-purple-700
 }
+
+.btn-emerald {
+    @apply bg-emerald-600 text-white hover:bg-emerald-700
+}

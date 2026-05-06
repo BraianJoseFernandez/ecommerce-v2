@@ -5,6 +5,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Models\Variant;
 use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\FamilyController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,50 +32,5 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/prueba', function () {
-    $product = Product::find(150);
 
-    $features = $product->options->pluck('pivot.features');
-
-    $convinaciones = generarCombinaciones($features);
-
-    $product->variants()->delete();
-
-    foreach ($convinaciones as $combinacion) {
-        
-        $variant = Variant::create([
-            'product_id' => $product->id
-        ]);
-
-        $variant->features()->attach($combinacion);
-
-    }
-
-    return 'combinaciones generadas';
-
-});
-
-function generarCombinaciones($arrays, $indice = 0, $combinacion = [])
-{
-
-    if ($indice == count($arrays)) {
-
-        return [$combinacion];
-
-    }
-
-    $resultado = [];
-
-    foreach ($arrays[$indice] as $item) {
-
-        $combinacionesTemporal = $combinacion;
-
-        $combinacionesTemporal[] = $item['id'];
-
-        $resultado = array_merge($resultado, generarCombinaciones($arrays, $indice + 1, $combinacionesTemporal));
-
-    }
-
-    return $resultado;
-
-}
+Route::get('families/{family}', [FamilyController::class, 'show'])->name('families.show');
