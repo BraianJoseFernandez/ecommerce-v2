@@ -128,14 +128,15 @@
                         <ul class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                             @foreach ($this->categories as $category)
                                 <li>
-                                    <a href="" class="text-lg font-semibold text-emerald-700 ">
+                                    <a href="{{ route('categories.show', $category) }}"
+                                        class="text-lg font-semibold text-emerald-700 ">
                                         {{ $category->name }}
                                     </a>
 
                                     <ul class="mt-4 space-y-2">
                                         @foreach ($category->subcategories as $subcategory)
                                             <li>
-                                                <a href="" class="text-sm text-gray-700 hover:text-emerald-700">
+                                                <a href="{{ route('subcategories.show', $subcategory) }}" class="text-sm text-gray-700 hover:text-emerald-700">
                                                     {{ $subcategory->name }}
                                                 </a>
                                             </li>

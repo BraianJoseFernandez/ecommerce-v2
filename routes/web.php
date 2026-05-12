@@ -5,7 +5,10 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use App\Models\Variant;
 use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\FamilyController;  
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubcategoryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,3 +37,6 @@ Route::middleware([
 
 
 Route::get('families/{family}', [FamilyController::class, 'show'])->name('families.show');
+Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('subcategories/{subcategory}', [SubcategoryController::class, 'show'])->name('subcategories.show');
+

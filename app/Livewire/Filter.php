@@ -9,29 +9,27 @@ use App\Models\Product;
 use Livewire\Attributes\On;
 
 
+
+
 class Filter extends Component
 {
     use WithPagination;
 
     public $family_id;
     public $options;
-
+    public $category_id;
+    public $subcategory_id;
     public $selected_features = [];
-
     public $search;
     public $orderBy = 1;
 
-    public function mount($family_id)
+    public function mount()
     {
-       $this->options = Option::whereHas('products.subcategory.category', function ($query)  {
-            $query->where('family_id', $this->family_id);
-        })->with([
-            'features' => function ($query) {
-                $query->whereHas('variants.product.subcategory.category', function ($query)  {
-                    $query->where('family_id', $this->family_id);
-                });
-            }
-        ])->get()->toArray();
+
+        $this->options = Option::verifyFamily($this->family_id)
+        ->verifyCategory($this->category_id)
+        ->verifySubcategory($this->subcategory_id)
+        ->get()->toArray();
        
     }
 
@@ -44,23 +42,11 @@ class Filter extends Component
     public function render()
     {
 
-        $products = Product::whereHas('subcategory.category', function ($query) {
-            $query->where('family_id', $this->family_id);
-        })
-        ->when($this->orderBy == 1, function ($query) {
-            $query->orderBy('created_at', 'desc');
-        })
-        ->when($this->orderBy == 2, function ($query) {
-            $query->orderBy('price', 'desc');
-        })
-        ->when($this->orderBy == 3, function ($query) {
-            $query->orderBy('price', 'asc');
-        })
-        ->when($this->selected_features, function ($query) {
-            $query->whereHas('variants.features', function ($query) {
-                $query->whereIn('features.id', $this->selected_features);
-            });
-        })
+        $products = Product::verifyFamily($this->family_id)
+        ->verifyCategory($this->category_id)
+        ->verifySubcategory($this->subcategory_id)
+        ->customOrder($this->orderBy)
+        ->selectFeature($this->selected_features)
         ->when($this->search, function ($query) {
             $query->where('name', 'like', '%' . $this->search . '%');
         })
