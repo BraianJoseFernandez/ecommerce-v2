@@ -61,7 +61,7 @@
                                 {{ $product->name }}</h1>
                             <p class="text-gray-600">$ {{ $product->price }}</p>
                         </div>
-                        <a href="" class="btn btn-emerald block  w-full text-center">Ver Mas</a>
+                        <a href="{{ route('products.show', $product) }}" class="btn btn-emerald block  w-full text-center">Ver Mas</a>
                     </article>
                 @endforeach
             </div>
