@@ -72,9 +72,12 @@
 
 
 
-                    <button class="text-xl md:text-3xl">
-                        <i class="fas fa-shopping-cart text-white"></i>
-                    </button>
+                    <a href="{{ route('cart.index') }}" class="relative">
+                        <i class="fas fa-shopping-cart text-white text-xl md:text-3xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -end-4 inline-flex w-6 h-6 items-center justify-center bg-red-600 rounded-full text-xs font-bold text-white" wire:model.live="cartUpdated">
+                            {{ Cart::instance('shopping')->count() }}
+                        </span>
+                    </a>
                 </div>
             </div>
 
@@ -161,5 +164,9 @@
                 search: value   
             })
         }
+
+        Livewire.on('cartUpdated', (count ) => {
+            document.getElementById('cart-count').innerText = count;
+        })
     </script>
 @endpush
