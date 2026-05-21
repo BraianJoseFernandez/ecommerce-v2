@@ -27,7 +27,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password', 
+        'lastname',
+        'phone',
+        'document',
+        'typeofdocument'
     ];
 
     /**
@@ -88,6 +92,11 @@ class User extends Authenticatable
 
             return 'https://ui-avatars.com/api/?name='.urlencode($name).'&color=7F9CF5&background=EBF4FF';
         });
+    }
+
+    public function adresses()
+    {
+        return $this->hasMany(Adress::class);
     }
 }
 

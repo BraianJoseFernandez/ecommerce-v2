@@ -54,7 +54,7 @@
                     <p>Total</p>
                     <p>$ {{ Cart::subtotal() }}</p>
                 </div>
-                <a href="#" class="btn btn-emerald w-full block text-center">Continuar compra</a>
+                <a href="{{ route('shipping.index') }}" class="btn btn-emerald w-full block text-center">Continuar compra</a>
             </div>
         </div>
     </div>
